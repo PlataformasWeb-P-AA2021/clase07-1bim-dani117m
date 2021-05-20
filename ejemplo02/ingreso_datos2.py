@@ -19,9 +19,12 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 # se crea un objetos de tipo Club 
-lecturaclub = open("./data/datos_clubs.txt","r")
+lecturaclub = open("./data/datos_clubs.txt","r", encoding="utf-8")
+lecturajugadores = open("./data/datos_jugadores.txt","r",encoding="utf-8")
 
+jugadordatos=list(lecturajugadores)
 datosClub = list(lecturaclub)
+
 
 clubdatos = []
 
@@ -29,27 +32,22 @@ for d in datosClub:
     d = d.replace('\n','')    
     clubdatos = d.split(';')
     
-    p = Club(nombre=clubdatos[0], deporte=clubdatos[1], anio=int(clubdatos[2]))
+    p = Club(nombre=clubdatos[0], deporte=clubdatos[1], fundacion=int(clubdatos[2]))
     
     session.add(p)
     print(clubdatos)        
 # Se crean objeto de tipo Jugador
-lecturajugadores = open("./data/datos_jugadores.txt","r")
+jugadores = []
 
-datosjugador = list(lecturajugadores)
-
-jugadordatos = []
-
-for d in datosjugador:
+for d in jugadordatos:
     d = d.replace('\n','')    
-    datosjugador = d.split(';')
-
-    p = Jugador(equipo= sesion.query(equipo).filter_by(nombre=datosjugador[0]).one(),\
-            posicion=datosjugador[1], numero=datosjugador[2],\
-            nombre=datosjugador[3])
+    jugadores = d.split(';')
+    p = Jugador( nombre = jugadores[3],\
+            dorsal = int(jugadores[2]),\
+            posicion = jugadores[1],\
+            club = session.query(Club).filter_by(nombre=jugadores[0]).one())
     session.add(p)
-    
-    print(datosjugador)     
+    print(jugadores)     
 
 
 
